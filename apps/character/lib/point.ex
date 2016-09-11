@@ -43,7 +43,7 @@ defmodule Point do
         state
     end
 
-    def inteact(state, %{event: <<"key", event>>, value: <<"Arrow", direction>>}) do
+    def interact(state, %{event: "key" <> event, value: "Arrow" <> direction}) do
         speed = 0.1
         d = if event == "Up" do
             -1

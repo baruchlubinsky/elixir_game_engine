@@ -44,13 +44,15 @@ defmodule Character do
             end
 
             def handle_cast({:do_interaction, from, msg}, state) do
-                state = interact(state, msg)
-                GenServer.cast(from, {:reply_interaction, self(), export(state)})
+                parent = self
+                spawn fn ->  
+                    GenServer.cast(parent, {:reply_interaction, from, interact(state, msg)})
+                end
                 {:noreply, state}
             end
 
             def handle_cast({:reply_interaction, _from, msg}, state) do
-                {:noreply, react(state, msg)}
+                {:noreply, msg}
             end
 
             def handle_cast({:tick, at}, state) do
