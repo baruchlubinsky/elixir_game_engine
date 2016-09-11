@@ -1,7 +1,7 @@
 defmodule GameServer.Endpoint do
   use Phoenix.Endpoint, otp_app: :game_server
 
-  socket "/socket", GameServer.UserSocket
+  socket "/websocket", GameServer.ClientSocket
 
   # Serve at "/" the static files from "priv/static" directory.
   #

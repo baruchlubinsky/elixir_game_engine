@@ -1,8 +1,9 @@
-defmodule GameServer.UserSocket do
+defmodule GameServer.ClientSocket do
   use Phoenix.Socket
 
   ## Channels
   # channel "room:*", GameServer.RoomChannel
+  channel "client:*", GameServer.ClientChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket

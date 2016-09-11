@@ -9,8 +9,8 @@ defmodule Point do
         {:ok, args}
     end
 
-    def new() do
-        GenServer.start(__MODULE__, [location: %Point{}, timestamp: now])
+    def new(id) do
+        GenServer.start(__MODULE__, [id: id, location: %Point{}, timestamp: now], name: String.to_atom(id))
     end
 
     def advance(state, timestamp) do
@@ -41,6 +41,22 @@ defmodule Point do
                {current, new}  
             end)
         state
+    end
+
+    def inteact(state, %{event: <<"key", event>>, value: <<"Arrow", direction>>}) do
+        speed = 0.1
+        d = if event == "Up" do
+            -1
+        else
+            1
+        end
+        f = case direction do
+            "Up" -> [fx: 0, fy: d*speed]
+            "Down" -> [fx: 0, fy: -d*speed]
+            "Left" -> [fx: -d*speed, fy: 0]
+            "Right" -> [fx: d*speed, fy: 0]
+        end
+        interact(state, f)
     end
 
     def run_loop(me) do 
