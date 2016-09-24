@@ -8,12 +8,11 @@ defmodule GameServer do
 
     # Define workers and child supervisors to be supervised
     children = [
-      # Start the Ecto repository
-      supervisor(GameServer.Repo, []),
       # Start the endpoint when the application starts
       supervisor(GameServer.Endpoint, []),
-      # Start your own worker by calling: GameServer.Worker.start_link(arg1, arg2, arg3)
-      # worker(GameServer.Worker, [arg1, arg2, arg3]),
+      
+      worker(Agent, [fn -> %{} end, [name: GameServer.Characters]]),
+      worker(Task, [fn -> game_loop() end])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
@@ -27,5 +26,11 @@ defmodule GameServer do
   def config_change(changed, _new, removed) do
     GameServer.Endpoint.config_change(changed, removed)
     :ok
+  end
+
+  def game_loop() do
+    GameServer.Endpoint.broadcast "viewport", "new_state", GameEngine.render(GameEngine.Supervisor) 
+    :timer.sleep(10)
+    game_loop
   end
 end

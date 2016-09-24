@@ -5,15 +5,11 @@
 # is restricted to this project.
 use Mix.Config
 
-# General application configuration
-config :game_server,
-  ecto_repos: [GameServer.Repo]
-
 # Configures the endpoint
 config :game_server, GameServer.Endpoint,
   url: [host: "localhost"],
-  secret_key_base: "Kam8wYebpRXM4LaaDIhFKq+jJYn0ZPo+cDfPXGF3j1HmfO0nKnL9htmBnp/1xJmD",
-  render_errors: [view: GameServer.ErrorView, accepts: ~w(html json)],
+  secret_key_base: "apcFUkrueFtsAPCrMljRV/hKAcsFMk9CErfX8AQw2ttjA0pLaMyDQGG9EAYNC/yT",
+  render_errors: [view: GameServer.ErrorView, accepts: ~w(json)],
   pubsub: [name: GameServer.PubSub,
            adapter: Phoenix.PubSub.PG2]
 

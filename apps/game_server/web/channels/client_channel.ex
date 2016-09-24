@@ -1,20 +1,16 @@
 defmodule GameServer.ClientChannel do
   use Phoenix.Channel
 
-  def join("client:point", %{user_id: user_id}, socket) do
-    {:ok, pid} = Point.new(user_id)
-    Task.start_link(fn -> loop_send(socket, pid) end)
+  def join("viewport", %{"user_id" => user_id}, socket) do
+    pid = GameEngine.add_character(GameEngine.Supervisor, Point, [[id: user_id]])
+    Agent.update(GameServer.Characters, fn state -> Map.put(state, user_id, pid) end)
     {:ok, socket}
   end
-
-  def handle_in("client:point", %{id: user_id, event: _name, value: _arg} = event, socket) do
-    Character.send(String.to_atom(user_id), event)
+  
+  def handle_in("event", %{"user_id" => user_id, "event" => event}, socket) do
+    character = Agent.get(GameServer.Characters, fn state -> Map.get(state, user_id, nil) end)
+    Character.send(character, event)
+    {:noreply, socket}
   end
 
-  def loop_send(socket, pid) do
-      state = Character.get(pid)
-      broadcast! socket, "new_state", %{sprites: [state]}
-      :timer.sleep(5)
-      loop_send(socket, pid)
-  end
 end

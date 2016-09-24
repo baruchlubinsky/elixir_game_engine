@@ -1,7 +1,7 @@
 defmodule GameServer.Endpoint do
   use Phoenix.Endpoint, otp_app: :game_server
 
-  socket "/websocket", GameServer.ClientSocket
+  socket "/socket", GameServer.UserSocket
 
   # Serve at "/" the static files from "priv/static" directory.
   #
@@ -14,8 +14,6 @@ defmodule GameServer.Endpoint do
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
   if code_reloading? do
-    socket "/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket
-    plug Phoenix.LiveReloader
     plug Phoenix.CodeReloader
   end
 
@@ -36,7 +34,7 @@ defmodule GameServer.Endpoint do
   plug Plug.Session,
     store: :cookie,
     key: "_game_server_key",
-    signing_salt: "pVOoGaRM"
+    signing_salt: "EBEkG/VK"
 
   plug GameServer.Router
 end

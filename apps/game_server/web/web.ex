@@ -18,21 +18,13 @@ defmodule GameServer.Web do
 
   def model do
     quote do
-      use Ecto.Schema
-
-      import Ecto
-      import Ecto.Changeset
-      import Ecto.Query
+      # Define common model functionality
     end
   end
 
   def controller do
     quote do
       use Phoenix.Controller
-
-      alias GameServer.Repo
-      import Ecto
-      import Ecto.Query
 
       import GameServer.Router.Helpers
       import GameServer.Gettext
@@ -45,9 +37,6 @@ defmodule GameServer.Web do
 
       # Import convenience functions from controllers
       import Phoenix.Controller, only: [get_csrf_token: 0, get_flash: 2, view_module: 1]
-
-      # Use all HTML functionality (forms, tags, etc)
-      use Phoenix.HTML
 
       import GameServer.Router.Helpers
       import GameServer.ErrorHelpers
@@ -64,10 +53,6 @@ defmodule GameServer.Web do
   def channel do
     quote do
       use Phoenix.Channel
-
-      alias GameServer.Repo
-      import Ecto
-      import Ecto.Query
       import GameServer.Gettext
     end
   end

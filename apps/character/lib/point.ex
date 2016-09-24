@@ -9,8 +9,13 @@ defmodule Point do
         {:ok, args}
     end
 
-    def new(id) do
-        GenServer.start(__MODULE__, [id: id, location: %Point{}, timestamp: now], name: String.to_atom(id))
+    def start_link(args) do
+        id = Keyword.fetch!(args, :id)
+        GenServer.start_link(__MODULE__, [id: id, location: %Point{}, timestamp: now], name: String.to_atom(id))
+    end
+
+    def export(state) do 
+        Enum.into state, %{}
     end
 
     def advance(state, timestamp) do
@@ -43,16 +48,16 @@ defmodule Point do
         state
     end
 
-    def interact(state, %{event: "key" <> event, value: "Arrow" <> direction}) do
-        speed = 0.1
+    def interact(state, %{"event" => "key" <> event, "value" => "Arrow" <> direction}) do
+        speed = 50
         d = if event == "Up" do
             -1
         else
             1
         end
         f = case direction do
-            "Up" -> [fx: 0, fy: d*speed]
-            "Down" -> [fx: 0, fy: -d*speed]
+            "Up" -> [fx: 0, fy: -d*speed]
+            "Down" -> [fx: 0, fy: d*speed]
             "Left" -> [fx: -d*speed, fy: 0]
             "Right" -> [fx: d*speed, fy: 0]
         end
@@ -61,7 +66,7 @@ defmodule Point do
 
     def run_loop(me) do 
         :ok = Character.advance(me, now)
-        :timer.sleep(1000)
+        :timer.sleep(5)
         run_loop(me)
     end
 end
